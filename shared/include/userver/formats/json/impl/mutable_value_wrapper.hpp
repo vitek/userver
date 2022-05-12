@@ -52,11 +52,10 @@ class MutableValueWrapper {
   // MAC_COMPAT
 #ifdef _LIBCPP_VERSION
   static constexpr size_t kSize = 80;
-  static constexpr size_t kAlignment = 8;
 #else
-  static constexpr size_t kSize = 88;
-  static constexpr size_t kAlignment = 8;
+  static constexpr size_t kSize = (sizeof(void*) == 8 ? 88 : 52);
 #endif
+  static constexpr size_t kAlignment = alignof(void*);
   utils::FastPimpl<Impl, kSize, kAlignment, true> impl_;
 };
 

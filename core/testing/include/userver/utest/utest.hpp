@@ -7,7 +7,7 @@
 #include <functional>
 #include <utility>
 
-#include <gtest/gtest.h>
+#include <userver/utest/typed_test_suite.hpp>
 
 #include <userver/engine/run_in_coro.hpp>  // legacy
 #include <userver/utest/assert_macros.hpp>

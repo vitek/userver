@@ -103,7 +103,7 @@ class RequestContext final {
 #ifdef _LIBCPP_VERSION  // TODO Find out a nicer way to calculate this size
   static constexpr auto kPimplSize = 40 + 8;
 #else
-  static constexpr auto kPimplSize = 56 + 8;
+  static constexpr auto kPimplSize = (sizeof(void*) == 8 ? 56 + 8 : 32);
 #endif
 
   utils::AnyMovable& SetUserAnyData(utils::AnyMovable&& data);
@@ -116,7 +116,7 @@ class RequestContext final {
   utils::AnyMovable* GetAnyDataOptional(const std::string& name);
   void EraseAnyData(const std::string& name);
 
-  utils::FastPimpl<Impl, kPimplSize, 8, true> impl_;
+  utils::FastPimpl<Impl, kPimplSize, alignof(void*), true> impl_;
 };
 
 template <typename Data>

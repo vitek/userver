@@ -75,8 +75,8 @@ class BufferedReader final {
 
   ReadableBasePtr source_;
 
-  constexpr static size_t kBufferSize = 40;
-  constexpr static size_t kBufferAlignment = 8;
+  constexpr static size_t kBufferSize = sizeof(void*) * 5;
+  constexpr static size_t kBufferAlignment = alignof(void*);
   utils::FastPimpl<impl::Buffer, kBufferSize, kBufferAlignment, true> buffer_;
 };
 

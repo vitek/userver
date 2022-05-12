@@ -4,7 +4,7 @@
 #include <random>
 #include <type_traits>
 
-#include <gtest/gtest.h>
+#include <userver/utest/typed_test_suite.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <userver/compiler/demangle.hpp>

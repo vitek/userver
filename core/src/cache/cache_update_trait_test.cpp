@@ -265,7 +265,7 @@ class CacheUpdateTraitDumpedFailure : public CacheUpdateTraitDumped {};
 
 }  // namespace
 
-UTEST_P(CacheUpdateTraitDumpedNoUpdate, Test) {
+UTEST_P(CacheUpdateTraitDumpedNoUpdate, BasicTest) {
   try {
     DumpedCache cache{config_, environment_, data_source_};
     EXPECT_EQ(cache.GetUpdatesLog(), std::vector<UpdateType>{})

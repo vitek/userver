@@ -121,7 +121,7 @@ class LogExtra final {
 #ifdef _LIBCPP_VERSION  // TODO Find out a nicer way to calculate this size
   static constexpr auto kPimplSize = 1560;
 #else
-  static constexpr auto kPimplSize = 1944;
+  static constexpr auto kPimplSize = (sizeof(void*) == 8 ? 1944 : 1356);
 #endif
   using MapItem = std::pair<Key, ProtectedValue>;
   using Map = boost::container::small_vector<MapItem, kSmallVectorSize>;
@@ -134,7 +134,7 @@ class LogExtra final {
 
   const std::pair<Key, ProtectedValue>* Find(std::string_view) const;
 
-  utils::FastPimpl<Map, kPimplSize, 8, true> extra_;
+  utils::FastPimpl<Map, kPimplSize, alignof(void*), true> extra_;
 };
 
 }  // namespace logging

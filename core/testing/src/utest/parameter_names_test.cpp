@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <gtest/gtest.h>
+#include <userver/utest/typed_test_suite.hpp>
 
 USERVER_NAMESPACE_BEGIN
 

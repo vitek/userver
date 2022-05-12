@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include <gtest/gtest.h>
+#include <userver/utest/typed_test_suite.hpp>
 
 #include <userver/formats/json/serialize.hpp>
 #include <userver/formats/json/value.hpp>

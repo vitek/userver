@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include <userver/utest/typed_test_suite.hpp>
 
 #include <userver/formats/json/exception.hpp>
 #include <userver/formats/json/serialize.hpp>

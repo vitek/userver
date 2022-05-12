@@ -40,6 +40,26 @@ void DoRunDeathTest(std::size_t thread_count,
 void RunSetUpTestSuite(void (*set_up_test_suite)());
 void RunTearDownTestSuite(void (*tear_down_test_suite)());
 
+template <class Fixture>
+auto RunSetUpTestSuite() -> decltype(Fixture::SetUpTestSuite()) {
+  impl::RunSetUpTestSuite(&Fixture::SetUpTestSuite);
+}
+
+template <class Fixture, class... Args>
+void RunSetUpTestSuite(Args...) {
+  impl::RunSetUpTestSuite(&Fixture::SetUpTestCase);
+}
+
+template <class Fixture>
+auto RunTearDownTestSuite() -> decltype(Fixture::TearDownTestSuite()) {
+  impl::RunTearDownTestSuite(&Fixture::TearDownTestSuite);
+}
+
+template <class Fixture, class... Args>
+void RunTearDownTestSuite(Args...) {
+  impl::RunTearDownTestSuite(&Fixture::TearDownTestCase);
+}
+
 // Inherits from the user's fixture (or '::testing::Test') and provides some
 // niceties to the test body ('GetThreadCount') while making the test methods
 // public ('SetUp', 'TearDown'). The fixture is further inherited from
@@ -56,7 +76,17 @@ class EnrichedFixture : public UserFixture, public EnrichedTestBase {
   using EnrichedTestBase::TestBody;
 
   bool IsTestCancelled() final {
-    return UserFixture::HasFatalFailure() || UserFixture::IsSkipped();
+    return UserFixture::HasFatalFailure() || IsSkipped<UserFixture>();
+  }
+  
+  template <class Fixture>
+  static inline auto IsSkipped() -> decltype(Fixture::IsSkipped()) {
+    return UserFixture::IsSkipped();
+  }
+
+  template <class Fixture, class... Args>
+  static inline bool IsSkipped(Args...) {
+    return false;
   }
 };
 
@@ -64,12 +94,16 @@ template <typename Base, typename UserFixture>
 class WithStaticMethods : public Base {
  public:
   static void SetUpTestSuite() {
-    RunSetUpTestSuite(&UserFixture::SetUpTestSuite);
+    impl::RunSetUpTestSuite<UserFixture>();
   }
+  // For ancient versions of gtest:
+  static void SetUpTestCase() { SetUpTestSuite(); }
 
   static void TearDownTestSuite() {
-    RunTearDownTestSuite(&UserFixture::TearDownTestSuite);
+    impl::RunTearDownTestSuite<UserFixture>();
   }
+  // For ancient versions of gtest:
+  static void TearDownTestCase() { TearDownTestSuite(); }
 };
 
 // 'TestLauncher' and 'TestLauncherParametric' take the enriched user's test
@@ -95,7 +129,7 @@ class TestLauncherParametric
   template <typename EnrichedTest>
   static void RunTest(std::size_t thread_count) {
     using ParamType = typename UserFixture::ParamType;
-    const auto& parameter = ::testing::TestWithParam<ParamType>::GetParam();
+    const auto& parameter = ::testing::WithParamInterface<ParamType>{}.GetParam();
 
     // It seems impossible to seamlessly proxy 'ParamType' from the launcher to
     // the enriched fixture without using gtest internals.

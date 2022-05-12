@@ -1,4 +1,4 @@
-#include <gtest/gtest-typed-test.h>
+#include <userver/utest/typed_test_suite.hpp>
 
 #include <unordered_set>
 

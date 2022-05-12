@@ -79,7 +79,7 @@ class StaticLogEntry final {
   bool ShouldLog() const noexcept;
 
  private:
-  alignas(void*) std::byte content[sizeof(void*) * 5];
+  alignas(void*) std::byte content[sizeof(void*) == 8 ? 40 : 24];
 };
 
 template <class NameHolder, int Line>

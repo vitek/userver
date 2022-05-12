@@ -57,7 +57,7 @@ class TracefulExceptionBase {
   MemoryBuffer& GetMessageBuffer();
 
   struct Impl;
-  utils::FastPimpl<Impl, 160, 8> impl_;
+  utils::FastPimpl<Impl, sizeof(MemoryBuffer) + sizeof(void*)*3, alignof(void*)> impl_;
 };
 
 /// @ingroup userver_base_classes

@@ -49,8 +49,8 @@ class ResponseFuture final {
   std::shared_ptr<Response> Get();
 
  private:
-  static constexpr auto kFutureSize = 16;
-  static constexpr auto kFutureAlignment = 8;
+  static constexpr auto kFutureSize = sizeof(void*) * 2;
+  static constexpr auto kFutureAlignment = alignof(void*);
   utils::FastPimpl<engine::impl::BlockingFuture<std::shared_ptr<Response>>,
                    kFutureSize, kFutureAlignment, true>
       future_;

@@ -91,6 +91,7 @@ Prefer avoiding Boost versions that are affected by the bug https://github.com/b
   cd build_release
   cmake -DCMAKE_BUILD_TYPE=Release ..
   make -j$(nproc)
+  ```
 
 
 ### Ubuntu 20.04 (Focal Fossa)
@@ -144,6 +145,25 @@ Prefer avoiding Boost versions that are affected by the bug https://github.com/b
   mkdir build_release
   cd build_release
   cmake -DUSERVER_FEATURE_STACKTRACE=0 -DUSERVER_FEATURE_PATCH_LIBPQ=0 -DCMAKE_BUILD_TYPE=Release ..
+  make -j$(nproc)
+  ```
+
+### Debian 10 x32
+
+1. Install the build and test dependencies from debian-10x32.md file:
+  ```
+  bash
+  sudo apt install -y $(cat scripts/docs/en/deps/debian-10x32.md | tr '\n' ' ')
+  ```
+
+2. Build the userver:
+  ```
+  bash
+  mkdir build_release
+  cd build_release
+  cmake -DUSERVER_FEATURE_POSTGRESQL=0 -DCMAKE_C_FLAGS='-D_FILE_OFFSET_BITS=64' \
+        -DCMAKE_CXX_FLAGS='-D_FILE_OFFSET_BITS=64' -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
+        -DCMAKE_BUILD_TYPE=Release ..
   make -j$(nproc)
   ```
 

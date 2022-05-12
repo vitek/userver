@@ -1,7 +1,6 @@
 #include <userver/formats/common/merge.hpp>
 
-#include <gtest/gtest-typed-test.h>
-#include <gtest/gtest.h>
+#include <userver/utest/typed_test_suite.hpp>
 
 #include <userver/formats/json/value_builder.hpp>
 #include <userver/formats/yaml/serialize.hpp>

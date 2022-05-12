@@ -39,7 +39,7 @@ struct HexBase {
   template <typename T>
   explicit HexBase(T* pointer) noexcept
       : HexBase(reinterpret_cast<uintptr_t>(pointer)) {
-    static_assert(sizeof(value) == sizeof(uintptr_t));
+    static_assert(sizeof(uintptr_t) <= sizeof(value));
   }
 };
 
