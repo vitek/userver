@@ -93,7 +93,6 @@ Prefer avoiding Boost versions that are affected by the bug https://github.com/b
   make -j$(nproc)
   ```
 
-
 ### Ubuntu 20.04 (Focal Fossa)
 
 1. Install the build and test dependencies from ubuntu-20.04.md file:
@@ -129,7 +128,6 @@ Prefer avoiding Boost versions that are affected by the bug https://github.com/b
         -DUSERVER_FEATURE_MONGODB=0 -DUSERVER_USE_LD=gold -DCMAKE_BUILD_TYPE=Release ..
   make -j$(nproc)
   ```
-  ```
 
 ### Fedora 35
 
@@ -148,12 +146,12 @@ Prefer avoiding Boost versions that are affected by the bug https://github.com/b
   make -j$(nproc)
   ```
 
-### Debian 10 x32
+### Debian 11 x32
 
-1. Install the build and test dependencies from debian-10x32.md file:
+1. Install the build and test dependencies from debian-11x32.md file:
   ```
   bash
-  sudo apt install -y $(cat scripts/docs/en/deps/debian-10x32.md | tr '\n' ' ')
+  sudo apt install -y $(cat scripts/docs/en/deps/debian-11x32.md | tr '\n' ' ')
   ```
 
 2. Build the userver:
@@ -164,6 +162,24 @@ Prefer avoiding Boost versions that are affected by the bug https://github.com/b
   cmake -DUSERVER_FEATURE_POSTGRESQL=0 -DCMAKE_C_FLAGS='-D_FILE_OFFSET_BITS=64' \
         -DCMAKE_CXX_FLAGS='-D_FILE_OFFSET_BITS=64' -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
         -DCMAKE_BUILD_TYPE=Release ..
+  make -j$(nproc)
+  ```
+
+### Gentoo
+
+1. Install the build and test dependencies from gentoo.md file:
+  ```
+  bash
+  sudo emerge --ask --update --oneshot $(cat scripts/docs/en/deps/gentoo.md | tr '\n' ' ')
+  ```
+
+2. Build the userver:
+  ```
+  bash
+  mkdir build_release
+  cd build_release
+  cmake -DUSERVER_CHECK_PACKAGE_VERSIONS=0 -DUSERVER_FEATURE_PATCH_LIBPQ=0 -DUSERVER_FEATURE_GRPC=0 \
+        -DUSERVER_FEATURE_CLICKHOUSE=0 -DCMAKE_BUILD_TYPE=Release ..
   make -j$(nproc)
   ```
 
