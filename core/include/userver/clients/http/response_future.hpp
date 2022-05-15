@@ -50,8 +50,9 @@ class ResponseFuture final {
   std::shared_ptr<Response> Get();
 
  private:
-  static constexpr std::size_t kFutureSize =
-      compiler::SelectSize().ForX64(16).ForX32(8);
+  static constexpr std::size_t kFutureSize = compiler::SelectSize()  //
+                                                 .ForX64(16)
+                                                 .ForX32(8);
   static constexpr std::size_t kFutureAlignment = alignof(void*);
   utils::FastPimpl<engine::impl::BlockingFuture<std::shared_ptr<Response>>,
                    kFutureSize, kFutureAlignment, utils::kStrictMatch>

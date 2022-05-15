@@ -76,8 +76,9 @@ class BufferedReader final {
 
   ReadableBasePtr source_;
 
-  constexpr static std::size_t kBufferSize =
-      compiler::SelectSize().ForX64(40).ForX32(20);
+  constexpr static std::size_t kBufferSize = compiler::SelectSize()  //
+                                                 .ForX64(40)
+                                                 .ForX32(20);
   constexpr static std::size_t kBufferAlignment = alignof(void*);
   utils::FastPimpl<impl::Buffer, kBufferSize, kBufferAlignment, true> buffer_;
 };
