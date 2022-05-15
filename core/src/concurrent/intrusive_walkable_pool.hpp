@@ -27,7 +27,8 @@ class TaggedPtr final {
   }
 
   T* GetDataPtr() const noexcept {
-    return reinterpret_cast<T*>(static_cast<std::uintptr_t>(impl_ & ((std::uint64_t{1} << kTagShift) - 1)));
+    return reinterpret_cast<T*>(static_cast<std::uintptr_t>(
+        impl_ & ((std::uint64_t{1} << kTagShift) - 1)));
   }
 
   Tag GetTag() const noexcept { return static_cast<Tag>(impl_ >> kTagShift); }
