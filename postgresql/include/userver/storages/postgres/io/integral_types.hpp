@@ -220,8 +220,8 @@ struct CppToSystemPg<detail::AltBigint> : PredefinedOid<PredefinedOids::kInt8> {
 };
 #else
 template <>
-struct CppToSystemPg<detail::AltInteger> : PredefinedOid<PredefinedOids::kInt4> {
-};
+struct CppToSystemPg<detail::AltInteger>
+    : PredefinedOid<PredefinedOids::kInt4> {};
 #endif
 /// @endcond
 

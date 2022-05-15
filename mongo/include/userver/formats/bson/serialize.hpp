@@ -82,11 +82,12 @@ class JsonString {
   size_t Size() const;
 
  private:
-  static constexpr size_t kSize = compiler::SelectSize() //
-                                                    .ForX64(16)
-                                                    .ForX32(8);
+  static constexpr size_t kSize = compiler::SelectSize()  //
+                                      .ForX64(16)
+                                      .ForX32(8);
   static constexpr size_t kAlignment = alignof(void*);
-  utils::FastPimpl<impl::JsonStringImpl, kSize, kAlignment, utils::kStrictMatch> impl_;
+  utils::FastPimpl<impl::JsonStringImpl, kSize, kAlignment, utils::kStrictMatch>
+      impl_;
 };
 
 std::ostream& operator<<(std::ostream&, const JsonString&);

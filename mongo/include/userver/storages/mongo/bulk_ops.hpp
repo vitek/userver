@@ -34,9 +34,9 @@ class InsertOne {
   friend class storages::mongo::operations::Bulk;
 
   class Impl;
-  static constexpr std::size_t kSize = compiler::SelectSize() //
-                                                    .ForX64(16)
-                                                    .ForX32(8);
+  static constexpr std::size_t kSize = compiler::SelectSize()  //
+                                           .ForX64(16)
+                                           .ForX32(8);
   static constexpr size_t kAlignment = alignof(void*);
   utils::FastPimpl<Impl, kSize, kAlignment, utils::kStrictMatch> impl_;
 };
@@ -59,9 +59,9 @@ class ReplaceOne {
   friend class storages::mongo::operations::Bulk;
 
   class Impl;
-  static constexpr std::size_t kSize = compiler::SelectSize() //
-                                                    .ForX64(48)
-                                                    .ForX32(24);
+  static constexpr std::size_t kSize = compiler::SelectSize()  //
+                                           .ForX64(48)
+                                           .ForX32(24);
   static constexpr size_t kAlignment = alignof(void*);
   utils::FastPimpl<Impl, kSize, kAlignment, utils::kStrictMatch> impl_;
 };
@@ -86,9 +86,9 @@ class Update {
   friend class storages::mongo::operations::Bulk;
 
   class Impl;
-  static constexpr std::size_t kSize = compiler::SelectSize() //
-                                                    .ForX64(56)
-                                                    .ForX32(28);
+  static constexpr std::size_t kSize = compiler::SelectSize()  //
+                                           .ForX64(56)
+                                           .ForX32(28);
   static constexpr size_t kAlignment = alignof(void*);
   utils::FastPimpl<Impl, kSize, kAlignment, utils::kStrictMatch> impl_;
 };
@@ -112,9 +112,9 @@ class Delete {
   friend class storages::mongo::operations::Bulk;
 
   class Impl;
-  static constexpr std::size_t kSize = compiler::SelectSize() //
-                                                    .ForX64(24)
-                                                    .ForX32(12);
+  static constexpr std::size_t kSize = compiler::SelectSize()  //
+                                           .ForX64(24)
+                                           .ForX32(12);
   static constexpr size_t kAlignment = alignof(void*);
   utils::FastPimpl<Impl, kSize, kAlignment, utils::kStrictMatch> impl_;
 };

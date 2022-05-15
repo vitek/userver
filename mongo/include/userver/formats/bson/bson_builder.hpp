@@ -66,9 +66,9 @@ class BsonBuilder {
  private:
   void AppendInto(bson_t*, std::string_view key, const ValueImpl&);
 
-  static constexpr std::size_t kSize = compiler::SelectSize() //
-                                                    .ForX64(8)
-                                                    .ForX32(4);
+  static constexpr std::size_t kSize = compiler::SelectSize()  //
+                                           .ForX64(8)
+                                           .ForX32(4);
   static constexpr std::size_t kAlignment = alignof(void*);
   utils::FastPimpl<MutableBson, kSize, kAlignment, utils::kStrictMatch> bson_;
 };
