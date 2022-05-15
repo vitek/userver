@@ -159,8 +159,7 @@ Prefer avoiding Boost versions that are affected by the bug https://github.com/b
   bash
   mkdir build_release
   cd build_release
-  cmake -DUSERVER_FEATURE_POSTGRESQL=0 -DCMAKE_C_FLAGS='-D_FILE_OFFSET_BITS=64' \
-        -DCMAKE_CXX_FLAGS='-D_FILE_OFFSET_BITS=64' -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
+  cmake -DCMAKE_C_FLAGS='-D_FILE_OFFSET_BITS=64' -DCMAKE_CXX_FLAGS='-D_FILE_OFFSET_BITS=64' \
         -DCMAKE_BUILD_TYPE=Release ..
   make -j$(nproc)
   ```

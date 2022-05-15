@@ -140,8 +140,8 @@ ValueBuilder::ValueBuilder(MaxKey value)
 ValueBuilder::ValueBuilder(const Timestamp& value)
     : impl_(std::make_shared<impl::ValueImpl>(value)) {}
 
-// MAC_COMPAT: different typedefs for 64_t on mac
-#ifdef __APPLE__
+// MAC_COMPAT: different typedefs for 64_t on MacOs or on x32
+#if defined(__APPLE__) || !defined(__x86_64__)
 ValueBuilder::ValueBuilder(long value)
 #else
 ValueBuilder::ValueBuilder(long long value)
@@ -149,8 +149,8 @@ ValueBuilder::ValueBuilder(long long value)
     : ValueBuilder(int64_t{value}) {
 }
 
-// MAC_COMPAT: different typedefs for 64_t on mac
-#ifdef __APPLE__
+// MAC_COMPAT: different typedefs for 64_t on MacOs or on x32
+#if defined(__APPLE__) || !defined(__x86_64__)
 ValueBuilder::ValueBuilder(unsigned long value)
 #else
 ValueBuilder::ValueBuilder(unsigned long long value)

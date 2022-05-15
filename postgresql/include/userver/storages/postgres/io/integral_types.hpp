@@ -98,10 +98,17 @@ struct IntegralBinaryFormatter {
   }
 };
 
+#ifdef __x86_64__
 // 64bit architectures have two types for 64bit integers, this is the second one
 using AltBigint =
     std::conditional_t<std::is_same_v<Bigint, long>, long long, long>;
 static_assert(sizeof(AltBigint) == sizeof(Bigint));
+#else
+// 32bit architectures have two types for 32bit integers, this is the second one
+using AltInteger =
+    std::conditional_t<std::is_same_v<Integer, int>, long int, int>;
+static_assert(sizeof(AltInteger) == sizeof(Integer));
+#endif
 
 }  // namespace detail
 
@@ -144,6 +151,7 @@ struct BufferFormatter<Bigint> : detail::IntegralBinaryFormatter<Bigint> {
 };
 
 /// @cond
+#ifdef __x86_64__
 template <>
 struct BufferParser<detail::AltBigint>
     : detail::IntegralBinaryParser<detail::AltBigint> {
@@ -156,7 +164,22 @@ struct BufferFormatter<detail::AltBigint>
   explicit BufferFormatter(detail::AltBigint val)
       : IntegralBinaryFormatter(val) {}
 };
+#else
+template <>
+struct BufferParser<detail::AltInteger>
+    : detail::IntegralBinaryParser<detail::AltInteger> {
+  explicit BufferParser(detail::AltInteger& val) : IntegralBinaryParser(val) {}
+};
+
+template <>
+struct BufferFormatter<detail::AltInteger>
+    : detail::IntegralBinaryFormatter<detail::AltInteger> {
+  explicit BufferFormatter(detail::AltInteger val)
+      : IntegralBinaryFormatter(val) {}
+};
+#endif
 /// @endcond
+
 //@}
 
 //@{
@@ -189,11 +212,19 @@ template <>
 struct CppToSystemPg<Bigint> : PredefinedOid<PredefinedOids::kInt8> {};
 template <>
 struct CppToSystemPg<bool> : PredefinedOid<PredefinedOids::kBoolean> {};
+
 /// @cond
+#ifdef __x86_64__
 template <>
 struct CppToSystemPg<detail::AltBigint> : PredefinedOid<PredefinedOids::kInt8> {
 };
+#else
+template <>
+struct CppToSystemPg<detail::AltInteger> : PredefinedOid<PredefinedOids::kInt4> {
+};
+#endif
 /// @endcond
+
 //@}
 
 }  // namespace storages::postgres::io

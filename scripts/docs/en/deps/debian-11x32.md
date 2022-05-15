@@ -1,10 +1,10 @@
 cmake
-libboost1.67-dev
-libboost-program-options1.67-dev
-libboost-filesystem1.67-dev
-libboost-locale1.67-dev
-libboost-regex1.67-dev
-libboost-iostreams1.67-dev
+libboost1.74-dev
+libboost-program-options1.74-dev
+libboost-filesystem1.74-dev
+libboost-locale1.74-dev
+libboost-regex1.74-dev
+libboost-iostreams1.74-dev
 libev-dev
 zlib1g-dev
 libcurl4-openssl-dev
@@ -19,7 +19,7 @@ libmongoc-dev
 libbson-dev
 libldap2-dev
 libpq-dev
-postgresql-server-dev-11
+postgresql-server-dev-13
 libkrb5-dev
 libhiredis-dev
 libgrpc-dev
@@ -41,5 +41,5 @@ libgmock-dev
 libgtest-dev
 ccache
 git
-postgresql-11
+postgresql-13
 redis-server

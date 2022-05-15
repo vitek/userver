@@ -7,6 +7,7 @@
 #include <string>
 #include <string_view>
 
+#include <userver/compiler/select.hpp>
 #include <userver/formats/bson/document.hpp>
 #include <userver/formats/bson/value.hpp>
 #include <userver/utils/fast_pimpl.hpp>
@@ -81,9 +82,11 @@ class JsonString {
   size_t Size() const;
 
  private:
-  static constexpr size_t kSize = 16;
-  static constexpr size_t kAlignment = 8;
-  utils::FastPimpl<impl::JsonStringImpl, kSize, kAlignment, true> impl_;
+  static constexpr size_t kSize = compiler::SelectSize() //
+                                                    .ForX64(16)
+                                                    .ForX32(8);
+  static constexpr size_t kAlignment = alignof(void*);
+  utils::FastPimpl<impl::JsonStringImpl, kSize, kAlignment, utils::kStrictMatch> impl_;
 };
 
 std::ostream& operator<<(std::ostream&, const JsonString&);
