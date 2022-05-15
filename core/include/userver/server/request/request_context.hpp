@@ -101,10 +101,10 @@ class RequestContext final {
  private:
   class Impl;
 
-  static constexpr std::size_t kPimplSize = compiler::SelectSize()
-                                                .ForLibCppX64(48)
-                                                .ForLibStdCppX64(64)
-                                                .ForLibStdCppX32(32);
+  static constexpr std::size_t kPimplSize = compiler::SelectSize()  //
+                                                .ForLibCpp64(48)
+                                                .ForLibStdCpp64(64)
+                                                .ForLibStdCpp32(32);
 
   utils::AnyMovable& SetUserAnyData(utils::AnyMovable&& data);
   utils::AnyMovable& GetUserAnyData();
