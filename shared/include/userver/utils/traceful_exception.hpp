@@ -10,6 +10,7 @@
 #include <fmt/format.h>
 #include <boost/stacktrace/stacktrace_fwd.hpp>
 
+#include <userver/compiler/select.hpp>
 #include <userver/utils/fast_pimpl.hpp>
 
 USERVER_NAMESPACE_BEGIN
@@ -57,7 +58,9 @@ class TracefulExceptionBase {
   MemoryBuffer& GetMessageBuffer();
 
   struct Impl;
-  utils::FastPimpl<Impl, sizeof(MemoryBuffer) + sizeof(void*)*3, alignof(void*)> impl_;
+  static constexpr std::size_t kSize =
+      sizeof(MemoryBuffer) + compiler::SelectSize().ForX64(24).ForX32(12);
+  utils::FastPimpl<Impl, kSize, alignof(void*)> impl_;
 };
 
 /// @ingroup userver_base_classes
