@@ -1,6 +1,7 @@
 #include <userver/formats/common/utils.hpp>
 
-#include <userver/utest/typed_test_suite.hpp>
+#include <gtest/gtest-typed-test.h>
+#include <gtest/gtest.h>
 
 USERVER_NAMESPACE_BEGIN
 

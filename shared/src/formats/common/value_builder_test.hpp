@@ -1,8 +1,7 @@
 #include <limits>
 #include <type_traits>
 
-#include <userver/utest/typed_test_suite.hpp>
-
+#include <gtest/gtest.h>
 #include <userver/compiler/demangle.hpp>
 #include <userver/formats/common/type.hpp>
 #include <userver/utils/strong_typedef.hpp>

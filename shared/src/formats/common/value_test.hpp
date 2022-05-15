@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <userver/utest/typed_test_suite.hpp>
+#include <gtest/gtest.h>
 
 namespace boost {
 template <class T>

@@ -1,4 +1,4 @@
-#include <userver/utest/typed_test_suite.hpp>
+#include <gtest/gtest.h>
 
 #include <unordered_map>
 
