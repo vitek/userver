@@ -1,6 +1,6 @@
 #include <userver/utils/bytes_per_second.hpp>
 
-#include <userver/utest/typed_test_suite.hpp>
+#include <gtest/gtest.h>
 
 USERVER_NAMESPACE_BEGIN
 

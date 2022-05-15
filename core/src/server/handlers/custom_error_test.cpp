@@ -1,4 +1,4 @@
-#include <userver/utest/typed_test_suite.hpp>
+#include <gtest/gtest.h>
 
 #include <userver/server/handlers/exceptions.hpp>
 #include <userver/server/handlers/handler_base.hpp>

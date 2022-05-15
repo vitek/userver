@@ -1,6 +1,6 @@
 #include <userver/utils/string_to_duration.hpp>
 
-#include <userver/utest/typed_test_suite.hpp>
+#include <gtest/gtest.h>
 
 USERVER_NAMESPACE_BEGIN
 

@@ -31,11 +31,12 @@ void LogFatalException(const std::exception& ex, const char* name) {
   const auto message = fmt::format(
       "C++ exception with description \"{}\" ({}) thrown in {}.{}{}", ex.what(),
       compiler::GetTypeName(typeid(ex)), name, newline, trace);
-  GTEST_FAIL() << message;
+  GTEST_FAIL_AT("unknown file", -1) << message;
 }
 
 void LogUnknownFatalException(const char* name) {
-  GTEST_FAIL() << fmt::format("Unknown C++ exception thrown in {}.", name);
+  const auto message = fmt::format("Unknown C++ exception thrown in {}.", name);
+  GTEST_FAIL_AT("unknown file", -1) << message;
 }
 
 template <typename Func>
@@ -76,26 +77,6 @@ void DoRunTest(std::size_t worker_threads,
   });
 }
 
-template <class Test>
-auto GetSetUpTestCaseAddress() -> decltype(&Test::SetUpTestSuite) {
-  return &Test::SetUpTestSuite;
-}
-
-template <class Test>
-auto GetSetUpTestCaseAddress() -> decltype(&Test::SetUpTestCase) {
-  return &Test::SetUpTestCase;
-}
-
-template <class Test>
-auto GetTearDownTestCaseAddress() -> decltype(&Test::TearDownTestSuite) {
-  return &Test::TearDownTestSuite;
-}
-
-template <class Test>
-auto GetTearDownTestCaseAddress() -> decltype(&Test::TearDownTestCase) {
-  return &Test::TearDownTestCase;
-}
-
 }  // namespace
 
 void DoRunTest(std::size_t thread_count,
@@ -114,7 +95,7 @@ void DoRunDeathTest(
 }
 
 void RunSetUpTestSuite(void (*set_up_test_suite)()) {
-  if (set_up_test_suite == GetSetUpTestCaseAddress< ::testing::Test>()) {
+  if (set_up_test_suite == &::testing::Test::SetUpTestSuite) {
     set_up_test_suite();
   } else {
     engine::RunStandalone(set_up_test_suite);
@@ -122,7 +103,7 @@ void RunSetUpTestSuite(void (*set_up_test_suite)()) {
 }
 
 void RunTearDownTestSuite(void (*tear_down_test_suite)()) {
-  if (tear_down_test_suite == GetTearDownTestCaseAddress< ::testing::Test>()) {
+  if (tear_down_test_suite == &::testing::Test::TearDownTestSuite) {
     tear_down_test_suite();
   } else {
     engine::RunStandalone(tear_down_test_suite);

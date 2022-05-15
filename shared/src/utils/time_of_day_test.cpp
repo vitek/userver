@@ -1,6 +1,6 @@
 #include <userver/utils/time_of_day.hpp>
 
-#include <userver/utest/typed_test_suite.hpp>
+#include <gtest/gtest.h>
 
 #include <fmt/format.h>
 
