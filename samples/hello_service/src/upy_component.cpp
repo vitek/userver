@@ -1,48 +1,53 @@
 #include "upy_component.hpp"
 
-#include <userver/logging/log.hpp>
-
 #include <stdexcept>
+
+#include <userver/components/component_context.hpp>
+#include <userver/components/single_threaded_task_processors.hpp>
+#include <userver/logging/log.hpp>
+#include <userver/utils/async.hpp>
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 namespace upython {
 
-Component::Component(
-    [[maybe_unused]] const userver::components::ComponentConfig& config,
-    [[maybe_unused]] const userver::components::ComponentContext& context)
-    : userver::components::LoggableComponentBase{config, context} {
-#if 0
-  /* Add a built-in module, before Py_Initialize */
-  if (PyImport_AppendInittab("foo", PyInit_foo) == -1) {
-    fprintf(stderr, "Error: could not extend in-built modules table\n");
-    exit(1);
-  }
-#endif
+namespace {
 
-  Py_Initialize();
+std::unique_ptr<Interpreter> PythonRuntimeInit(size_t idx) {
+  PyInterpreterConfig config = {
+    .check_multi_interp_extensions = 1,
+    .gil = PyInterpreterConfig_OWN_GIL,
+  };
+  PyThreadState *tstate = nullptr;
+  PyStatus status = Py_NewInterpreterFromConfig(&tstate, &config);
+  if (PyStatus_Exception(status)) {
+    return nullptr;
+  }
+
   PyObject* pName = nullptr;
+  PyObject* pModule = nullptr;
 
   pName = PyUnicode_FromString("upy");
-  pModule_ = PyImport_Import(pName);
+  pModule = PyImport_Import(pName);
 
   Py_DECREF(pName);
 
-  if (!pModule_) {
+  if (!pModule) {
     PyErr_Print();
     throw std::runtime_error("oops");
   }
 
-  PyObject* pFunc = PyObject_GetAttrString(pModule_, "init");
+  PyObject* pFunc = PyObject_GetAttrString(pModule, "init");
+  Py_XDECREF(pModule);
 
   if (!pFunc) {
     PyErr_Print();
-    Py_DECREF(pModule_);
+    Py_DECREF(pModule);
     throw std::runtime_error("oops");
   }
 
-  PyObject* pResult = PyObject_CallFunction(pFunc, "s", "Hello, world!");
+  PyObject* pResult = PyObject_CallFunction(pFunc, "n", idx);
 
   Py_XDECREF(pFunc);
 
@@ -51,53 +56,60 @@ Component::Component(
     throw std::runtime_error("oops");
   }
 
-  const char* retval = PyUnicode_AsUTF8(pResult);
+  return std::make_unique<Interpreter>(Interpreter{
+    .tstate = tstate,
+    .func = pResult,
+    });
+}
 
-  if (!retval) {
-    PyErr_Print();
-    throw std::runtime_error("oops");
+}  // namespace
+
+Component::Component(
+    [[maybe_unused]] const userver::components::ComponentConfig& config,
+    [[maybe_unused]] const userver::components::ComponentContext& context)
+    : userver::components::LoggableComponentBase{config, context},
+      pool_(context
+                .FindComponent<
+                    userver::components::SingleThreadedTaskProcessors>()
+                .GetPool()) {
+  Py_Initialize();
+
+  std::vector<userver::engine::TaskWithResult<std::unique_ptr<Interpreter>>> features;
+
+  for (size_t idx = 0; idx < pool_.GetSize(); idx++) {
+    auto& task_processor = pool_.At(idx);
+    auto feature = userver::utils::Async(task_processor, "upy-init", [&, idx] {
+      return PythonRuntimeInit(idx);
+    });
+    features.push_back(std::move(feature));
   }
 
-  LOG_INFO() << "Python said: " << retval;
-
-  Py_XDECREF(pResult);
-
-  //RunScript();
+  for (auto &feature: features) {
+    interpreters_.push_back(feature.Get());
+  }
 }
 
 std::string Component::RunScript() {
-  std::string result;
+  size_t idx = idx_++ % pool_.GetSize();
+  auto& task_processor = pool_.At(idx);
 
-  {
-    std::lock_guard<userver::engine::Mutex> lock(mutex_);
+  auto feature = userver::utils::Async(task_processor, "upy-script", [&]() {
+    auto *interpreter = interpreters_[idx].get();
 
-    PyGILState_STATE gstate;
-    gstate = PyGILState_Ensure();
+    PyObject* pyResult = PyObject_CallNoArgs(interpreter->func);
 
-    PyObject* pFunc = PyObject_GetAttrString(pModule_, "run_script");
-
-    if (!pFunc) {
+    if (!pyResult) {
       PyErr_Print();
-      PyGILState_Release(gstate);
       throw std::runtime_error("oops");
     }
 
-    PyObject* pResult = PyObject_CallNoArgs(pFunc);
-    Py_DECREF(pFunc);
+    const char* retval = PyUnicode_AsUTF8(pyResult);
+    std::string result = retval;
+    Py_DECREF(pyResult);
+    return result;
+  });
 
-    if (!pResult) {
-      PyErr_Print();
-      PyGILState_Release(gstate);
-      throw std::runtime_error("oops");
-    }
-
-    const char* retval = PyUnicode_AsUTF8(pResult);
-
-    result = retval;
-    Py_DECREF(pResult);
-PyGILState_Release(gstate);  }
-
-  return result;
+  return feature.Get();
 }
 
 }  // namespace upython

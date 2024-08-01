@@ -28,3 +28,8 @@ components_manager:
             task_processor: main-task-processor  # Run it on CPU bound task processor
 
         upython:
+
+        single-threaded-task-processors:
+            thread_name: py-task-processors
+            # Number of python sub-interpreters
+            worker_threads: 4

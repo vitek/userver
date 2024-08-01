@@ -1,4 +1,6 @@
+#include <userver/components/component.hpp>
 #include <userver/components/minimal_server_component_list.hpp>
+#include <userver/components/single_threaded_task_processors.hpp>
 #include <userver/utest/using_namespace_userver.hpp>
 #include <userver/utils/daemon_run.hpp>
 
@@ -10,8 +12,9 @@
 
 int main(int argc, char* argv[]) {
   auto component_list = components::MinimalServerComponentList()
-                        .Append<samples::hello::HelloHandler>()
-                        .Append<upython::Component>();
+                            .Append<components::SingleThreadedTaskProcessors>()
+                            .Append<samples::hello::HelloHandler>()
+                            .Append<upython::Component>();
 
   return utils::DaemonMain(argc, argv, component_list);
 }

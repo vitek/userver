@@ -1,7 +1,8 @@
-def init(arg):
-    print(f'Hello, {arg!r}')
-    return 'hello from python'
+def init(idx):
+    print(f'I am interpreter {idx}')
 
-def run_script():
-    return 'Hello from python'
+    def script():
+        return f'Hello from python interpreter {idx}\n'
+
+    return script
 

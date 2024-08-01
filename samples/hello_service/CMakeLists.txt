@@ -9,7 +9,8 @@ find_package(userver COMPONENTS core REQUIRED)
 
 add_compile_options(
    # TODO:  $(shell $(PYTHON3_CONFIG) --cflags)
-  -I/usr/include/python3.12 -I/usr/include/python3.12  -fno-strict-overflow -Wsign-compare  -DNDEBUG
+   -I/usr/include/python3.12 -I/usr/include/python3.12  -fno-strict-overflow -Wsign-compare  -DNDEBUG
+   -std=c++20
 )
 add_link_options(
   # TODO:  $(shell $(PYTHON3_CONFIG) --ldflags)
